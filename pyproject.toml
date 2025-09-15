@@ -16,6 +16,7 @@ dependencies = [
     "pydantic==2.11.7",
     "loguru==0.7.3",
     "python-dotenv==1.1.1",
+    "marvelous@git+https://github.com/end-to-end-mlops-databricks-4/marvelous"
 ]
 
 dynamic = ['version']
@@ -39,8 +40,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where =["src"]
-include = ["house_price*", "marvel_characters*"]
-
+include = ["churn*", "marvel_characters*"]
 
 [tool.setuptools.dynamic]
 version = { file = "version.txt" }
