@@ -7,7 +7,7 @@
 
 print("Hello World")
 
-print("\nNow set remote url")
+print("\nLast attempt")
 
 # COMMAND ----------
 
