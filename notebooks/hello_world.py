@@ -7,7 +7,7 @@
 
 print("Hello World")
 
-print("\nChanged credentials")
+print("\nNow set remote url")
 
 # COMMAND ----------
 
