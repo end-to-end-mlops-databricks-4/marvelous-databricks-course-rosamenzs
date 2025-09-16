@@ -7,6 +7,8 @@
 
 print("Hello World")
 
+print("\nChanged credentials")
+
 # COMMAND ----------
 
 # MAGIC %md
