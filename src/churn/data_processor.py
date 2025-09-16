@@ -31,10 +31,7 @@ class DataProcessor:
 
         # Fill missing values with mean or default values
         self.df.fillna(
-            {
-                "MonthlyCharges": self.df["MonthlyCharges"].mean(),
-                "TotalCharges": self.df["MonthlyCharges"].mean()
-            },
+            {"MonthlyCharges": self.df["MonthlyCharges"].mean(), "TotalCharges": self.df["MonthlyCharges"].mean()},
             inplace=True,
         )
 

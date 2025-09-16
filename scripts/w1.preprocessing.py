@@ -1,13 +1,11 @@
 """Script to preprocess data."""
 
 import yaml
-
 from databricks.connect import DatabricksSession
-
 from loguru import logger
 
 from churn.config import ProjectConfig
-from churn.data_processor import DataProcessor #, generate_synthetic_data, generate_test_data
+from churn.data_processor import DataProcessor  # , generate_synthetic_data, generate_test_data
 from churn.parser import Parser
 
 args = Parser.create_parser()
@@ -20,7 +18,7 @@ is_test = args.is_test
 logger.info("Configuration loaded:")
 logger.info(yaml.dump(config, default_flow_style=False))
 
-#spark = SparkSession.builder.local().getOrCreate()
+# spark = SparkSession.builder.local().getOrCreate()
 spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
 
 # Load the churn dataset
@@ -28,13 +26,13 @@ df = spark.read.csv(
     f"/Volumes/{config.catalog_name}/{config.schema_name}/data/data.csv", header=True, inferSchema=True
 ).toPandas()
 
-#if is_test==0:
+# if is_test==0:
 #    # Generate synthetic data.
 #    # This is mimicking a new data arrival. In real world, this would be a new batch of data.
 #    # df is passed to infer schema
 #    new_data = generate_synthetic_data(df, num_rows=100)
 #    logger.info("Synthetic data generated.")
-#else:
+# else:
 #    # Generate synthetic data
 #    # This is mimicking a new data arrival. This is a valid example for integration testing.
 #    new_data = generate_test_data(df, num_rows=100)

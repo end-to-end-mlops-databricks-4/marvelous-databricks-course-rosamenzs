@@ -28,6 +28,7 @@ To create a new environment and create a lockfile, run:
 task sync-dev
 source .venv/bin/activate   # .venv\Scripts\activate
                             # python scripts/w1.preprocessing.py data_ingestion --root_path "C:/Users/MensesR/Downloads/Local repo MLOps training - personal/marvelous-databricks-course-rosamenzs" --env dev --is_test 1
+                            # python -m pre_commit run --all-files
 ```
 
 Or, alternatively:

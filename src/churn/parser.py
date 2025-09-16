@@ -1,8 +1,8 @@
 """Parser module."""
 
+import argparse
 from collections.abc import Sequence
 
-import argparse
 
 class Parser:
     """Parser class for MLOps on Databricks."""
@@ -27,7 +27,9 @@ class Parser:
         subparsers.add_parser("data_ingestion", parents=[common_args], help="Data ingestion options")
 
         # Model training & registering
-        model_parser = subparsers.add_parser("model_train_register", parents=[common_args], help="Model training and registering options")
+        model_parser = subparsers.add_parser(
+            "model_train_register", parents=[common_args], help="Model training and registering options"
+        )
         model_parser.add_argument("--git_sha", type=str, required=True, help="git sha of the commit")
         model_parser.add_argument("--job_run_id", type=str, required=True, help="run id of the databricks job")
         model_parser.add_argument("--branch", type=str, required=True, help="branch of the project")
