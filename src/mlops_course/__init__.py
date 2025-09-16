@@ -1,1 +1,1 @@
-"""Initialisation of mlops_course package"""
+"""Initialisation of mlops_course package."""
