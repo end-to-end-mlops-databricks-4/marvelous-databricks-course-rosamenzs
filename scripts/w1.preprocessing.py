@@ -5,9 +5,10 @@ from databricks.connect import DatabricksSession
 
 from churn.config import ProjectConfig
 from churn.data_processor import DataProcessor #, generate_synthetic_data, generate_test_data
-from marvelous.common import create_parser
+from churn.parser import Parser
+#from marvelous.common import create_parser
 
-args = create_parser()
+args = Parser.create_parser()
 
 root_path = args.root_path
 config_path = f"{root_path}/project_config.yml"
