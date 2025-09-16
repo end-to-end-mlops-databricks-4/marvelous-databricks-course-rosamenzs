@@ -16,7 +16,8 @@ dependencies = [
     "pydantic==2.11.7",
     "loguru==0.7.3",
     "python-dotenv==1.1.1",
-    "marvelous@git+https://github.com/end-to-end-mlops-databricks-4/marvelous"
+    
+    "marvelous@git+https://github.com/end-to-end-mlops-databricks-4/marvelous.git"
 ]
 
 dynamic = ['version']
@@ -36,7 +37,6 @@ test = ["pre-commit>=4.1.0, <5",
 requires = [
   "setuptools>=72.0"]
 build-backend = "setuptools.build_meta"
-
 
 [tool.setuptools.packages.find]
 where =["src"]
