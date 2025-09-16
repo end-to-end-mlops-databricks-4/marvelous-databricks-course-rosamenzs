@@ -3,6 +3,7 @@
 import yaml
 
 from databricks.connect import DatabricksSession
+
 from loguru import logger
 
 from churn.config import ProjectConfig
@@ -27,19 +28,18 @@ df = spark.read.csv(
     f"/Volumes/{config.catalog_name}/{config.schema_name}/data/data.csv", header=True, inferSchema=True
 ).toPandas()
 
-'''
-if is_test==0:
-    # Generate synthetic data.
-    # This is mimicking a new data arrival. In real world, this would be a new batch of data.
-    # df is passed to infer schema
-    new_data = generate_synthetic_data(df, num_rows=100)
-    logger.info("Synthetic data generated.")
-else:
-    # Generate synthetic data
-    # This is mimicking a new data arrival. This is a valid example for integration testing.
-    new_data = generate_test_data(df, num_rows=100)
-    logger.info("Test data generated.")
-'''
+#if is_test==0:
+#    # Generate synthetic data.
+#    # This is mimicking a new data arrival. In real world, this would be a new batch of data.
+#    # df is passed to infer schema
+#    new_data = generate_synthetic_data(df, num_rows=100)
+#    logger.info("Synthetic data generated.")
+#else:
+#    # Generate synthetic data
+#    # This is mimicking a new data arrival. This is a valid example for integration testing.
+#    new_data = generate_test_data(df, num_rows=100)
+#    logger.info("Test data generated.")
+
 new_data = df
 
 # Initialize DataProcessor

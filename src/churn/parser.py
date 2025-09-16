@@ -1,8 +1,8 @@
 """Parser module."""
 
-import argparse
-
 from collections.abc import Sequence
+
+import argparse
 
 class Parser:
     """Parser class for MLOps on Databricks."""
