@@ -1,6 +1,7 @@
 """Parser module."""
 
 import argparse
+
 from collections.abc import Sequence
 
 class Parser:

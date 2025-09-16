@@ -2,8 +2,8 @@
 
 from typing import Any
 
-import yaml
 from pydantic import BaseModel
+import yaml
 
 class ProjectConfig(BaseModel):
     """Represent project configuration parameters loaded from YAML.

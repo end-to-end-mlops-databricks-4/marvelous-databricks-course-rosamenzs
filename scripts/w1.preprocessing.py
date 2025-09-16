@@ -1,14 +1,13 @@
 """Script to preprocess data."""
 
 import yaml
-from loguru import logger
-#from pyspark.sql import SparkSession
+
 from databricks.connect import DatabricksSession
+from loguru import logger
 
 from churn.config import ProjectConfig
 from churn.data_processor import DataProcessor #, generate_synthetic_data, generate_test_data
 from churn.parser import Parser
-#from marvelous.common import create_parser
 
 args = Parser.create_parser()
 
