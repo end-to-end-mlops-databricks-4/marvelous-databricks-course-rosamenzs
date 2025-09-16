@@ -46,3 +46,4 @@ class Tags(BaseModel):
 
     git_sha: str
     branch: str
+    

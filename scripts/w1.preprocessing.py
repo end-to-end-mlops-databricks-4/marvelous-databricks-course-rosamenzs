@@ -1,3 +1,5 @@
+"""Script to preprocess data."""
+
 import yaml
 from loguru import logger
 #from pyspark.sql import SparkSession
