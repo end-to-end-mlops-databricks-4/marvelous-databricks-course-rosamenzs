@@ -3,17 +3,17 @@
 import pandas as pd
 import pytest
 
-#from pyspark.sql import SparkSession
+# from pyspark.sql import SparkSession
 from databricks.connect import DatabricksSession
 
+from churn import PROJECT_DIR
 from churn.config import ProjectConfig
 from churn.data_processor import DataProcessor
-from churn import PROJECT_DIR
-
 
 MLRUNS_DIR = PROJECT_DIR / "tests" / "mlruns"
 CATALOG_DIR = PROJECT_DIR / "tests" / "catalog"
 CATALOG_DIR.mkdir(parents=True, exist_ok=True)  # noqa
+
 
 def test_data_ingestion(sample_data: pd.DataFrame) -> None:
     """Test the data ingestion process by checking the shape of the sample data.
@@ -26,9 +26,11 @@ def test_data_ingestion(sample_data: pd.DataFrame) -> None:
     assert sample_data.shape[1] > 0
 
 
-def test_invalid_env_raises_value_error():
+def test_invalid_env_raises_value_error() -> None:
+    """Tests whether ValueError is thrown in case of invalid environment."""
     with pytest.raises(ValueError, match="Invalid environment: test. Expected 'prd', 'acc', or 'dev'"):
         ProjectConfig.from_yaml(PROJECT_DIR / "project_config.yaml", env="test")
+
 
 def test_dataprocessor_init(
     sample_data: pd.DataFrame,
@@ -46,17 +48,18 @@ def test_dataprocessor_init(
     assert processor.df.equals(sample_data)
 
     assert isinstance(processor.config, ProjectConfig)
-    #assert isinstance(processor.spark, DatabricksSession)
+    # assert isinstance(processor.spark, DatabricksSession)
+
 
 def test_preprocess(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: DatabricksSession) -> None:
-
+    """Test whether preprocessing happens correctly."""
     processor = DataProcessor(pandas_df=sample_data, config=config, spark=spark_session)
     processor.preprocess()
     df = processor.df
 
     expected_columns = config.cat_features + config.num_features + [config.target, "customerID"]
     assert list(df.columns) == expected_columns
-   
+
     for col in config.num_features:
         assert not df[col].isnull().any()
 
@@ -67,7 +70,7 @@ def test_preprocess(sample_data: pd.DataFrame, config: ProjectConfig, spark_sess
 
 
 def test_split_data(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: DatabricksSession) -> None:
-
+    """Test whether splitting of data happens correctly."""
     processor = DataProcessor(pandas_df=sample_data, config=config, spark=spark_session)
     processor.preprocess()
 

@@ -4,10 +4,9 @@ import yaml
 from databricks.connect import DatabricksSession
 from loguru import logger
 
+from churn import PROJECT_DIR
 from churn.config import ProjectConfig
 from churn.data_processor import DataProcessor  # , generate_synthetic_data, generate_test_data
-
-from churn import PROJECT_DIR
 
 config = ProjectConfig.from_yaml(config_path=(PROJECT_DIR / "project_config.yml").resolve(), env="dev")
 

@@ -2,14 +2,13 @@
 
 import pandas as pd
 import pytest
-import typing
-from loguru import logger
-#from pyspark.sql import SparkSession
+
+# from pyspark.sql import SparkSession
 from databricks.connect import DatabricksSession
+from loguru import logger
 
 from churn import PROJECT_DIR
 from churn.config import ProjectConfig, Tags
-from tests.unit_tests.spark_config import spark_config
 
 
 @pytest.fixture(scope="session")
@@ -18,18 +17,6 @@ def spark_session() -> DatabricksSession:
 
     This fixture creates a SparkSession with the specified configuration and returns it for use in tests.
     """
-    # One way
-    #spark = SparkSession.builder.getOrCreate()  # noqa
-    # Alternative way - better
-    #spark = (
-    #    SparkSession.builder.master(spark_config.master)
-    #    .appName(spark_config.app_name)
-    #    .config("spark.executor.cores", spark_config.spark_executor_cores)
-    #    .config("spark.executor.instances", spark_config.spark_executor_instances)
-    #    .config("spark.sql.shuffle.partitions", spark_config.spark_sql_shuffle_partitions)
-    #    .config("spark.driver.bindAddress", spark_config.spark_driver_bindAddress)
-    #    .getOrCreate()
-    #)
     spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
 
     yield spark
@@ -61,10 +48,6 @@ def sample_data(config: ProjectConfig, spark_session: DatabricksSession) -> pd.D
     file_path = PROJECT_DIR / "tests" / "test_data" / "sample.csv"
     sample = pd.read_csv(file_path.as_posix())
 
-    # Alternative approach to reading the sample
-    # Important Note: Replace NaN with None in Pandas Before Conversion to Spark DataFrame:
-    # sample = sample.where(sample.notna(), None)  # noqa
-    # sample = spark_session.createDataFrame(sample).toPandas()  # noqa
     return sample
 
 
