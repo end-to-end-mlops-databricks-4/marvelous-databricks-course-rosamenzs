@@ -56,7 +56,7 @@ class DataProcessor:
         train_set, test_set = train_test_split(self.df, test_size=test_size, random_state=random_state)
         return train_set, test_set
 
-    def save_to_catalog(self, train_set: pd.DataFrame, test_set: pd.DataFrame) -> None:
+    def save_to_catalog(self, train_set: pd.DataFrame, test_set: pd.DataFrame) -> None:  # pragma: no cover
         """Save the train and test sets into Databricks tables.
 
         :param train_set: The training DataFrame to be saved.
@@ -78,7 +78,7 @@ class DataProcessor:
             f"{self.config.catalog_name}.{self.config.schema_name}.test_set"
         )
 
-    def enable_change_data_feed(self) -> None:
+    def enable_change_data_feed(self) -> None:  # pragma: no cover
         """Enable Change Data Feed for train and test set tables.
 
         This method alters the tables to enable Change Data Feed functionality.

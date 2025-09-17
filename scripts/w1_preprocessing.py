@@ -6,14 +6,10 @@ from loguru import logger
 
 from churn.config import ProjectConfig
 from churn.data_processor import DataProcessor  # , generate_synthetic_data, generate_test_data
-from churn.parser import Parser
 
-args = Parser.create_parser()
+from churn import PROJECT_DIR
 
-root_path = args.root_path
-config_path = f"{root_path}/project_config.yml"
-config = ProjectConfig.from_yaml(config_path=config_path, env=args.env)
-is_test = args.is_test
+config = ProjectConfig.from_yaml(config_path=(PROJECT_DIR / "project_config.yml").resolve(), env="dev")
 
 logger.info("Configuration loaded:")
 logger.info(yaml.dump(config, default_flow_style=False))
@@ -26,22 +22,8 @@ df = spark.read.csv(
     f"/Volumes/{config.catalog_name}/{config.schema_name}/data/data.csv", header=True, inferSchema=True
 ).toPandas()
 
-# if is_test==0:
-#    # Generate synthetic data.
-#    # This is mimicking a new data arrival. In real world, this would be a new batch of data.
-#    # df is passed to infer schema
-#    new_data = generate_synthetic_data(df, num_rows=100)
-#    logger.info("Synthetic data generated.")
-# else:
-#    # Generate synthetic data
-#    # This is mimicking a new data arrival. This is a valid example for integration testing.
-#    new_data = generate_test_data(df, num_rows=100)
-#    logger.info("Test data generated.")
-
-new_data = df
-
 # Initialize DataProcessor
-data_processor = DataProcessor(new_data, config, spark)
+data_processor = DataProcessor(df, config, spark)
 
 # Preprocess the data
 data_processor.preprocess()
