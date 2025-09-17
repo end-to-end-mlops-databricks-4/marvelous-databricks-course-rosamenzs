@@ -776,16 +776,6 @@ wheels = [
 ]
 
 [[package]]
-name = "marvelous"
-version = "0.3.1"
-source = { git = "https://github.com/end-to-end-mlops-databricks-4/marvelous#5aeda191249a4273d40c55d35dab07cbe4628af6" }
-dependencies = [
-    { name = "loguru" },
-    { name = "octokitpy" },
-    { name = "requests" },
-]
-
-[[package]]
 name = "matplotlib"
 version = "3.10.6"
 source = { registry = "https://pypi.org/simple" }
