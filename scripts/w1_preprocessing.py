@@ -1,7 +1,6 @@
 """Script to preprocess data."""
 
 import yaml
-
 from databricks.connect import DatabricksSession
 from loguru import logger
 

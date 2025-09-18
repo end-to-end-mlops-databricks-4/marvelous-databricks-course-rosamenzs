@@ -11,7 +11,6 @@ from churn.config import ProjectConfig, Tags
 # from databricks.connect import SparkSession
 
 
-
 @pytest.fixture(scope="session")
 def spark_session() -> SparkSession:
     """Create and return a SparkSession for testing.
