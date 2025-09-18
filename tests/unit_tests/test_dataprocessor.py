@@ -2,13 +2,14 @@
 
 import pandas as pd
 import pytest
-
 from pyspark.sql import SparkSession
-# from databricks.connect import SparkSession
 
 from churn import PROJECT_DIR
 from churn.config import ProjectConfig
 from churn.data_processor import DataProcessor
+
+# from databricks.connect import SparkSession
+
 
 MLRUNS_DIR = PROJECT_DIR / "tests" / "mlruns"
 CATALOG_DIR = PROJECT_DIR / "tests" / "catalog"

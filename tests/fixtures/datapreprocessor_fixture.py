@@ -2,13 +2,14 @@
 
 import pandas as pd
 import pytest
-
-from pyspark.sql import SparkSession
-# from databricks.connect import SparkSession
 from loguru import logger
+from pyspark.sql import SparkSession
 
 from churn import PROJECT_DIR
 from churn.config import ProjectConfig, Tags
+
+# from databricks.connect import SparkSession
+
 
 
 @pytest.fixture(scope="session")
@@ -18,6 +19,7 @@ def spark_session() -> SparkSession:
     This fixture creates a SparkSession with the specified configuration and returns it for use in tests.
     """
     spark = SparkSession.builder.getOrCreate()
+
     yield spark
     spark.stop()
 
