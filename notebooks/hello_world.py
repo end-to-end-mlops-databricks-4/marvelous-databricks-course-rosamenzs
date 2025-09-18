@@ -6,8 +6,6 @@
 
 print("Hello World")
 
-print("\nLast attempt")
-
 # COMMAND ----------
 
 # MAGIC %md
