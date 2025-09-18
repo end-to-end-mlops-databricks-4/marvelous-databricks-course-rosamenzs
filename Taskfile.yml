@@ -15,7 +15,8 @@ tasks:
   sync-dev:
     desc: Sync project dependencies with optionals
     cmds:
-      - rm -rf .venv
+      #- rm -rf .venv
+      #- Remove-Item -Recurse -Force .venv
       - task: create-venv
       - uv sync --extra dev
 

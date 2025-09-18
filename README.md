@@ -26,7 +26,10 @@ GIT_TOKEN=<your github PAT>
 To create a new environment and create a lockfile, run:
 ```
 task sync-dev
-source .venv/bin/activate
+source .venv/bin/activate   # .venv\Scripts\activate
+                            # python scripts/w1_preprocessing.py
+                            # python -m pre_commit run --all-files
+                            # python -m pytest --cov=src --cov-report=term-missing
 ```
 
 Or, alternatively:
@@ -36,6 +39,3 @@ uv venv -p 3.11 .venv
 source .venv/bin/activate
 uv sync --extra dev
 ```
-
-
-
