@@ -2,23 +2,24 @@
 
 import pandas as pd
 import pytest
-from databricks.connect import DatabricksSession
-from loguru import logger
 
-# from pyspark.sql import SparkSession
+# from databricks.connect import DatabricksSession
+from loguru import logger
+from pyspark.sql import SparkSession
+
 from churn import PROJECT_DIR
 from churn.config import ProjectConfig, Tags
 
 
 @pytest.fixture(scope="session")
-# def spark_session() -> SparkSession:
-def spark_session() -> DatabricksSession:
+def spark_session() -> SparkSession:
+    # def spark_session() -> DatabricksSession:
     """Create and return a SparkSession for testing.
 
     This fixture creates a SparkSession with the specified configuration and returns it for use in tests.
     """
-    # spark = SparkSession.builder.getOrCreate()
-    spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
+    spark = SparkSession.builder.getOrCreate()
+    # spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
 
     yield spark
     spark.stop()
@@ -39,8 +40,8 @@ def config() -> ProjectConfig:
 
 
 @pytest.fixture(scope="function")
-# def sample_data(config: ProjectConfig, spark_session: SparkSession) -> pd.DataFrame:
-def sample_data(config: ProjectConfig, spark_session: DatabricksSession) -> pd.DataFrame:
+def sample_data(config: ProjectConfig, spark_session: SparkSession) -> pd.DataFrame:
+    # def sample_data(config: ProjectConfig, spark_session: DatabricksSession) -> pd.DataFrame:
     """Create a sample DataFrame from a CSV file.
 
     This fixture reads a CSV file using either Spark or pandas, then converts it to a Pandas DataFrame,

@@ -1,8 +1,8 @@
 # Databricks notebook source
 
 import mlflow
-#from pyspark.sql import SparkSession
-from databricks.connect import DatabricksSession
+from pyspark.sql import SparkSession
+#from databricks.connect import DatabricksSession
 
 from churn.config import ProjectConfig, Tags
 from churn.models.LRmodel import LRModel
@@ -23,8 +23,8 @@ mlflow.set_registry_uri(f"databricks-uc://{profile}")
 
 
 config = ProjectConfig.from_yaml(config_path="../project_config.yml", env="dev")
-#spark = SparkSession.builder.getOrCreate()
-spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
+spark = SparkSession.builder.getOrCreate()
+#spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
 tags = Tags(**{"git_sha": "TEMP", "branch": "week2", "model": "LR"})
 
 # COMMAND ----------

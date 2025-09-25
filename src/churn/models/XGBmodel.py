@@ -15,15 +15,17 @@ import mlflow
 import numpy as np
 import pandas as pd
 import xgboost as xgb
+
+# from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
 from loguru import logger
 from mlflow import MlflowClient
 from mlflow.data.dataset_source import DatasetSource
 from mlflow.models import infer_signature
-#from pyspark.sql import SparkSession
-from databricks.connect import DatabricksSession
 from sklearn.compose import ColumnTransformer
-#from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.metrics import precision_score, recall_score, f1_score
+
+# from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import f1_score, precision_score, recall_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
@@ -36,7 +38,7 @@ class XGBModel:
     This class handles data loading, feature preparation, model training, and MLflow logging.
     """
 
-    #def __init__(self, config: ProjectConfig, tags: Tags, spark: SparkSession) -> None:
+    # def __init__(self, config: ProjectConfig, tags: Tags, spark: SparkSession) -> None:
     def __init__(self, config: ProjectConfig, tags: Tags, spark: DatabricksSession) -> None:
         """Initialize the model with project configuration.
 
@@ -105,9 +107,9 @@ class XGBModel:
             y_pred = self.pipeline.predict(self.X_test)
 
             # Evaluate metrics
-            #mse = mean_squared_error(self.y_test, y_pred)
-            #mae = mean_absolute_error(self.y_test, y_pred)
-            #r2 = r2_score(self.y_test, y_pred)
+            # mse = mean_squared_error(self.y_test, y_pred)
+            # mae = mean_absolute_error(self.y_test, y_pred)
+            # r2 = r2_score(self.y_test, y_pred)
 
             precision = precision_score(self.y_test, y_pred)
             recall = recall_score(self.y_test, y_pred)
@@ -132,9 +134,7 @@ class XGBModel:
                 version=self.data_version,
             )
             mlflow.log_input(dataset, context="training")
-            mlflow.sklearn.log_model(
-                sk_model=self.pipeline, artifact_path="xgb-pipeline-model", signature=signature
-            )
+            mlflow.sklearn.log_model(sk_model=self.pipeline, artifact_path="xgb-pipeline-model", signature=signature)
 
     def register_model(self) -> None:
         """Register model in Unity Catalog."""
