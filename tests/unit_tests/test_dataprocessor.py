@@ -2,14 +2,12 @@
 
 import pandas as pd
 import pytest
-from pyspark.sql import SparkSession
+from databricks.connect import DatabricksSession
 
+# from pyspark.sql import SparkSession
 from churn import PROJECT_DIR
 from churn.config import ProjectConfig
 from churn.data_processor import DataProcessor
-
-# from databricks.connect import SparkSession
-
 
 MLRUNS_DIR = PROJECT_DIR / "tests" / "mlruns"
 CATALOG_DIR = PROJECT_DIR / "tests" / "catalog"
@@ -36,7 +34,8 @@ def test_invalid_env_raises_value_error() -> None:
 def test_dataprocessor_init(
     sample_data: pd.DataFrame,
     config: ProjectConfig,
-    spark_session: SparkSession,
+    # spark_session: SparkSession,
+    spark_session: DatabricksSession,
 ) -> None:
     """Test the initialization of DataProcessor.
 
@@ -52,7 +51,8 @@ def test_dataprocessor_init(
     # assert isinstance(processor.spark, SparkSession)
 
 
-def test_preprocess(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: SparkSession) -> None:
+# def test_preprocess(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: SparkSession) -> None:
+def test_preprocess(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: DatabricksSession) -> None:
     """Test whether preprocessing happens correctly."""
     processor = DataProcessor(pandas_df=sample_data, config=config, spark=spark_session)
     processor.preprocess()
@@ -70,7 +70,8 @@ def test_preprocess(sample_data: pd.DataFrame, config: ProjectConfig, spark_sess
     assert df["customerID"].dtype == object
 
 
-def test_split_data(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: SparkSession) -> None:
+# def test_split_data(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: SparkSession) -> None:
+def test_split_data(sample_data: pd.DataFrame, config: ProjectConfig, spark_session: DatabricksSession) -> None:
     """Test whether splitting of data happens correctly."""
     processor = DataProcessor(pandas_df=sample_data, config=config, spark=spark_session)
     processor.preprocess()
@@ -93,7 +94,10 @@ def test_split_data(sample_data: pd.DataFrame, config: ProjectConfig, spark_sess
 
 @pytest.mark.skip(reason="depends on delta tables on Databricks")
 def test_save_to_catalog_succesfull(
-    sample_data: pd.DataFrame, config: ProjectConfig, spark_session: SparkSession
+    # sample_data: pd.DataFrame, config: ProjectConfig, spark_session: SparkSession
+    sample_data: pd.DataFrame,
+    config: ProjectConfig,
+    spark_session: DatabricksSession,
 ) -> None:
     """Test the successful saving of data to the catalog.
 

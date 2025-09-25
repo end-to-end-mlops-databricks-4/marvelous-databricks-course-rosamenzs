@@ -40,8 +40,11 @@ class DataProcessor:
         for cat_col in cat_features:
             self.df[cat_col] = self.df[cat_col].astype("category")
 
-        # Extract target and relevant features
+        # Handle target variable
         target = self.config.target
+        self.df[target] = self.df[target].map({"Yes": 1, "No": 0}).astype("int")
+
+        # Extract target and relevant features
         relevant_columns = cat_features + num_features + [target] + ["customerID"]
         self.df = self.df[relevant_columns]
         self.df["customerID"] = self.df["customerID"].astype("str")
