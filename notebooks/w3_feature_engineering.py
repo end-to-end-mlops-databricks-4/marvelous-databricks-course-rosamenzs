@@ -6,16 +6,14 @@
 # MAGIC %restart_python
 
 # COMMAND ----------
-import os 
-from dotenv import load_dotenv
-
+import os
 
 # Configure tracking uri
 import mlflow
-from loguru import logger
+from dotenv import load_dotenv
 from pyspark.sql import SparkSession
-#from databricks.connect import DatabricksSession
 
+# from databricks.connect import DatabricksSession
 from churn.config import ProjectConfig, Tags
 from churn.models.LR_feature_lookup_model import FeatureLookupLRModel
 
@@ -26,7 +24,7 @@ mlflow.set_tracking_uri(f"databricks://{profile}")
 mlflow.set_registry_uri(f"databricks-uc://{profile}")
 
 spark = SparkSession.builder.getOrCreate()
-#spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
+# spark = DatabricksSession.builder.remote(cluster_id="0911-113128-1v3eeo04").getOrCreate()
 tags_dict = {"git_sha": "abcd12345", "branch": "week3"}
 tags = Tags(**tags_dict)
 

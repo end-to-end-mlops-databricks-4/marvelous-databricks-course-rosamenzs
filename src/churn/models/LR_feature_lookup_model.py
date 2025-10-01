@@ -1,24 +1,20 @@
 """LR model with feature lookup implementation."""
 
+from functools import reduce
+
 import mlflow
-import numpy as np
-import pandas as pd
 
 # New packages for feature store
 from databricks import feature_engineering
 from databricks.feature_engineering import FeatureFunction, FeatureLookup
-from databricks.feature_store import FeatureStoreClient
 from databricks.sdk import WorkspaceClient
-from mlflow.tracking import MlflowClient
-from pyspark.sql import DataFrame
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 
-#from databricks.connect import DatabricksSession
+# from databricks.connect import DatabricksSession
 from loguru import logger
 from mlflow import MlflowClient
-from mlflow.data.dataset_source import DatasetSource
 from mlflow.models import infer_signature
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 
@@ -26,7 +22,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, precision_score, recall_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
-from functools import reduce
 
 from churn.config import ProjectConfig, Tags
 
@@ -35,7 +30,7 @@ class FeatureLookupLRModel:
     """A model class for churn prediction using LR with feature lookup."""
 
     def __init__(self, config: ProjectConfig, tags: Tags, spark: SparkSession) -> None:
-    #def __init__(self, config: ProjectConfig, tags: Tags, spark: DatabricksSession) -> None:
+        # def __init__(self, config: ProjectConfig, tags: Tags, spark: DatabricksSession) -> None:
         """Initialize the model with project configuration."""
         self.config = config
         self.spark = spark
@@ -60,11 +55,9 @@ class FeatureLookupLRModel:
         self.tags = tags.dict()
 
         logger.info("✅ Model initialized with configuration.")
-    
 
     def create_feature_table(self) -> None:
         """Create or update the churn_features table and populate it with engineered features."""
-
         # Determine table structure
         self.spark.sql(f"""
         CREATE OR REPLACE TABLE {self.feature_table_name} (
@@ -77,7 +70,7 @@ class FeatureLookupLRModel:
         # Determine primary key
         self.spark.sql(f"ALTER TABLE {self.feature_table_name} ADD CONSTRAINT churn_pk PRIMARY KEY(customerID);")
 
-        # Activate Delta Lake change data feed 
+        # Activate Delta Lake change data feed
         self.spark.sql(f"ALTER TABLE {self.feature_table_name} SET TBLPROPERTIES (delta.enableChangeDataFeed = true);")
 
         # Load data from train and test sets, combine
@@ -87,41 +80,37 @@ class FeatureLookupLRModel:
 
         # Feature engineering steps
         service_cols = [
-            "PhoneService", "MultipleLines", "OnlineSecurity", "OnlineBackup",
-            "DeviceProtection", "TechSupport", "StreamingTV", "StreamingMovies"
+            "PhoneService",
+            "MultipleLines",
+            "OnlineSecurity",
+            "OnlineBackup",
+            "DeviceProtection",
+            "TechSupport",
+            "StreamingTV",
+            "StreamingMovies",
         ]
 
         # Calculate number of services subscribed
-        #df = df.withColumn("num_services", sum([F.when(F.col(c) == "Yes", 1).otherwise(0) for c in service_cols]))
+        # df = df.withColumn("num_services", sum([F.when(F.col(c) == "Yes", 1).otherwise(0) for c in service_cols]))
         df = df.withColumn(
             "num_services",
-            reduce(
-                lambda a, b: a + b,
-                [F.when(F.col(c) == "Yes", 1).otherwise(0) for c in service_cols]
-            )
+            reduce(lambda a, b: a + b, [F.when(F.col(c) == "Yes", 1).otherwise(0) for c in service_cols]),
         )
-        
+
         # Identify vulnerable customers (senior citizens without partner or dependents)
         df = df.withColumn(
-            "is_vulnerable",
-            (F.col("SeniorCitizen") == 1) &
-            (F.col("Partner") == "No") &
-            (F.col("Dependents") == "No")
+            "is_vulnerable", (F.col("SeniorCitizen") == 1) & (F.col("Partner") == "No") & (F.col("Dependents") == "No")
         )
 
         # Write to feature table
-        df.select(
-            "customerID", 
-            "num_services", "is_vulnerable"
-        ).write.mode("overwrite").saveAsTable(self.feature_table_name)
+        df.select("customerID", "num_services", "is_vulnerable").write.mode("overwrite").saveAsTable(
+            self.feature_table_name
+        )
 
         logger.info("✅ Feature table created and populated.")
 
-
-    
     def define_feature_function(self) -> None:
         """Define a SQL feature function to detect excessive costs."""
-
         self.spark.sql(f"""
         CREATE OR REPLACE FUNCTION {self.function_name}(MonthlyCharges DOUBLE, tenure INT, TotalCharges DOUBLE)
         RETURNS BOOLEAN
@@ -147,15 +136,14 @@ class FeatureLookupLRModel:
         self.train_set = self.train_set.withColumn("MonthlyCharges", self.train_set["MonthlyCharges"].cast("double"))
         self.train_set = self.train_set.withColumn("TotalCharges", self.train_set["TotalCharges"].cast("double"))
         self.train_set = self.train_set.withColumn("customerID", self.train_set["customerID"].cast("string"))
-    
+
         logger.info("✅ Data successfully loaded.")
         logger.info("Test")
 
     def feature_engineering(self) -> None:
         """Perform feature engineering by linking data with feature tables and applying feauture function."""
-
         logger.info("Starting feature engineering...")
-        
+
         self.training_set = self.fe.create_training_set(
             df=self.train_set,
             label=self.target,
@@ -171,14 +159,14 @@ class FeatureLookupLRModel:
                     input_bindings={
                         "MonthlyCharges": "MonthlyCharges",
                         "tenure": "tenure",
-                        "TotalCharges": "TotalCharges"
+                        "TotalCharges": "TotalCharges",
                     },
                 ),
             ],
             exclude_columns=["update_timestamp_utc"],
         )
 
-        #logger.info(f"Training DF columns: {self.training_set.load_df().toPandas().columns.tolist()}")
+        # logger.info(f"Training DF columns: {self.training_set.load_df().toPandas().columns.tolist()}")
 
         # Loads as Pandas DataFrame
         self.training_df = self.training_set.load_df().toPandas()
@@ -190,18 +178,22 @@ class FeatureLookupLRModel:
 
         # Add column "num_services" to test set (not automatically applied like in training set)
         service_cols = [
-                    "PhoneService", "MultipleLines", "OnlineSecurity", "OnlineBackup",
-                    "DeviceProtection", "TechSupport", "StreamingTV", "StreamingMovies"
+            "PhoneService",
+            "MultipleLines",
+            "OnlineSecurity",
+            "OnlineBackup",
+            "DeviceProtection",
+            "TechSupport",
+            "StreamingTV",
+            "StreamingMovies",
         ]
-        self.test_set["num_services"] = self.test_set[service_cols].apply(
-            lambda row: sum(row == "Yes"), axis=1
-        )
+        self.test_set["num_services"] = self.test_set[service_cols].apply(lambda row: sum(row == "Yes"), axis=1)
 
         # Add column "is_vulnerable" to test set (not automatically applied like in training set)
         self.test_set["is_vulnerable"] = (
-            (self.test_set["SeniorCitizen"] == 1) &
-            (self.test_set["Partner"] == "No") &
-            (self.test_set["Dependents"] == "No")
+            (self.test_set["SeniorCitizen"] == 1)
+            & (self.test_set["Partner"] == "No")
+            & (self.test_set["Dependents"] == "No")
         )
 
         # Determine which features are used for model training
@@ -223,7 +215,7 @@ class FeatureLookupLRModel:
         preprocessor = ColumnTransformer(
             transformers=[("cat", OneHotEncoder(handle_unknown="ignore"), self.cat_features)], remainder="passthrough"
         )
-        
+
         pipeline = Pipeline(
             steps=[("preprocessor", preprocessor), ("classification_model", LogisticRegression(**self.parameters))]
         )
@@ -251,20 +243,20 @@ class FeatureLookupLRModel:
             mlflow.log_metric("f1_score", f1)
             signature = infer_signature(model_input=self.X_train, model_output=y_pred)
 
-            #self.fe.log_model(
+            # self.fe.log_model(
             #    model=pipeline,
             #    flavor=mlflow.sklearn,
             #    artifact_path="lookup-lr-pipeline-model",
             #    training_set=self.training_set,
             #    signature=signature,
-            #)
+            # )
             mlflow.sklearn.log_model(
                 sk_model=pipeline,
                 artifact_path="lookup-lr-pipeline-model",
                 signature=signature,
-                input_example=None  # or provide an input example if available
+                input_example=None,  # or provide an input example if available
             )
-            
+
     def register_model(self) -> str:
         """Register model in Unity Catalog."""
         logger.info("🔄 Registering the model in UC...")
@@ -285,5 +277,3 @@ class FeatureLookupLRModel:
         )
 
         return latest_version
-
-    
