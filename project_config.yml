@@ -1,0 +1,52 @@
+prd:
+  catalog_name: mlops_dev
+  schema_name: mensesr
+acc:
+  catalog_name: mlops_dev
+  schema_name: mensesr
+dev:
+  catalog_name: mlops_dev
+  schema_name: mensesr
+
+#experiment_name_basic: /Shared/churn-basic
+#experiment_name_custom: /Shared/house-prices-custom
+#experiment_name_fe: /Shared/house-prices-fe
+experiment_name_XGB: /Users/rosaverhoeven@live.nl/xgb-experiment
+experiment_name_LR: /Users/rosaverhoeven@live.nl/lr-experiment
+experiment_name_LR_feature_lookup: /Users/rosaverhoeven@live.nl/lr-experiment-lookup
+
+# XGBoost parameters
+parameters_XGB:
+  learning_rate: 0.1
+  n_estimators: 500
+  max_depth: 10
+
+parameters_LR:
+  penalty: l2
+  C: 0.5
+  max_iter: 5000
+
+num_features:
+  - tenure
+  - MonthlyCharges
+  - TotalCharges
+
+cat_features:
+  - gender
+  - SeniorCitizen
+  - Partner
+  - Dependents
+  - PhoneService
+  - MultipleLines
+  - InternetService
+  - OnlineSecurity
+  - OnlineBackup
+  - DeviceProtection
+  - TechSupport
+  - StreamingTV
+  - StreamingMovies
+  - Contract
+  - PaperlessBilling
+  - PaymentMethod
+
+target: Churn
