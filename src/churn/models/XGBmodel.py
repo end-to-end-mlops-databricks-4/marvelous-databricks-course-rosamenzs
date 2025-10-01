@@ -1,4 +1,4 @@
-"""Basic model implementation.
+"""Basic XGBoost model implementation.
 
 infer_signature (from mlflow.models) → Captures input-output schema for model tracking.
 

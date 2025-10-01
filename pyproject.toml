@@ -1,9 +1,9 @@
 [project]
-name = "mlops-course"
-description = "MLOps with Databricks course"
+name = "churn"
+description = "Churn project"
 requires-python = ">=3.12, <3.13"
 dependencies = [
-    "mlflow==3.1.1",
+    "mlflow==3.1.4",
     "cffi==1.17.1",
     "cloudpickle==3.1.1",
     "numpy==1.26.4",
@@ -39,6 +39,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where =["src"]
 include = ["churn*"]
+
+[tool.setuptools.package-data]
+"churn" = ["version.txt"]
 
 [tool.setuptools.dynamic]
 version = { file = "version.txt" }
@@ -78,8 +81,7 @@ lint.ignore = [
     "E501", # line-too-long
     "C901", # too complex
     "ERA001", # commented out code
-    "D100", # missing docstring
-    "ERA001" # commented out code
+    "D100" # missing docstring
 ]
 
 [tool.ruff.format]

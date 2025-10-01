@@ -2,6 +2,8 @@
 
 import pandas as pd
 from pyspark.sql import SparkSession
+
+# from databricks.connect import DatabricksSession
 from pyspark.sql.functions import current_timestamp, to_utc_timestamp
 from sklearn.model_selection import train_test_split
 
@@ -14,6 +16,7 @@ class DataProcessor:
     This class handles data preprocessing, splitting, and saving to Databricks tables.
     """
 
+    # def __init__(self, pandas_df: pd.DataFrame, config: ProjectConfig, spark: DatabricksSession) -> None:
     def __init__(self, pandas_df: pd.DataFrame, config: ProjectConfig, spark: SparkSession) -> None:
         self.df = pandas_df  # Store the DataFrame as self.df
         self.config = config  # Store the configuration

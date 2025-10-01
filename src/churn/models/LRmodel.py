@@ -1,4 +1,4 @@
-"""Basic model implementation.
+"""Basic LR model implementation.
 
 infer_signature (from mlflow.models) → Captures input-output schema for model tracking.
 
@@ -31,7 +31,7 @@ from churn.config import ProjectConfig, Tags
 
 
 class LRModel:
-    """A basic model class for churn prediction using XGBoost.
+    """A basic model class for churn prediction using LR.
 
     This class handles data loading, feature preparation, model training, and MLflow logging.
     """

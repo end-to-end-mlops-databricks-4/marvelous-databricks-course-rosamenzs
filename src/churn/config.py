@@ -22,6 +22,7 @@ class ProjectConfig(BaseModel):
     parameters_LR: dict[str, Any]
     experiment_name_XGB: str | None
     experiment_name_LR: str | None
+    experiment_name_LR_feature_lookup: str | None
 
     @classmethod
     def from_yaml(cls, config_path: str, env: str = "dev") -> "ProjectConfig":
