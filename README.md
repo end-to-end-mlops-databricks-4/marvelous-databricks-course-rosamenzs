@@ -26,7 +26,13 @@ GIT_TOKEN=<your github PAT>
 To create a new environment and create a lockfile, run:
 ```
 task sync-dev
-source .venv/bin/activate
+source .venv/bin/activate   # .venv\Scripts\activate
+                            # python scripts/w1_preprocessing.py
+                            # python -m pre_commit run --all-files
+                            # python -m pytest --cov=src --cov-report=term-missing
+                            # $env:DATABRICKS_CONFIG_PROFILE = "DEFAULT"
+                            # uv build
+                            # databricks fs cp dist/churn-0.0.1-py3-none-any.whl dbfs:/tmp/churn-0.0.1-py3-none-any.whl --profile DEFAULT
 ```
 
 Or, alternatively:
@@ -36,6 +42,3 @@ uv venv -p 3.11 .venv
 source .venv/bin/activate
 uv sync --extra dev
 ```
-
-
-

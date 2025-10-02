@@ -1,9 +1,9 @@
 [project]
-name = "mlops-course"
-description = "MLOps with Databricks course"
+name = "churn"
+description = "Churn project"
 requires-python = ">=3.12, <3.13"
 dependencies = [
-    "mlflow==3.1.1",
+    "mlflow==3.1.4",
     "cffi==1.17.1",
     "cloudpickle==3.1.1",
     "numpy==1.26.4",
@@ -12,16 +12,17 @@ dependencies = [
     "scikit-learn==1.7.0",
     "lightgbm==4.6.0",
     "scipy==1.16.0",
-    "databricks-sdk==0.55.0",
+    "databricks-sdk==0.62.0",
     "pydantic==2.11.7",
     "loguru==0.7.3",
     "python-dotenv==1.1.1",
+    "databricks-feature-engineering==0.13.0"
 ]
 
 dynamic = ['version']
 
 [project.optional-dependencies]
-dev = ["databricks-connect>=16.0, <17",
+dev = ["databricks-connect==16.4.5",
        "ipykernel>=6.29.5, <7",
        "pip>=25.0.1, <26",
        "pre-commit>=4.1.0, <5"]
@@ -29,18 +30,19 @@ dev = ["databricks-connect>=16.0, <17",
 test = ["pre-commit>=4.1.0, <5",
        "pytest>=8.0.0, <9",
        "pytest-cov>=5.0.0, <6",
-       "pyspark>=3.4.0, <4"]
+       "pyspark == 4.0.1"]
 
 [build-system]
 requires = [
   "setuptools>=72.0"]
 build-backend = "setuptools.build_meta"
 
-
 [tool.setuptools.packages.find]
 where =["src"]
-include = ["house_price*", "marvel_characters*"]
+include = ["churn*"]
 
+[tool.setuptools.package-data]
+"churn" = ["version.txt"]
 
 [tool.setuptools.dynamic]
 version = { file = "version.txt" }
@@ -80,8 +82,7 @@ lint.ignore = [
     "E501", # line-too-long
     "C901", # too complex
     "ERA001", # commented out code
-    "D100", # missing docstring
-    "ERA001" # commented out code
+    "D100" # missing docstring
 ]
 
 [tool.ruff.format]
